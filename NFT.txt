@@ -1,0 +1,70 @@
+// contracts/GLDToken.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+//import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+contract MemoryToken is ERC721URIStorage{
+  
+  using Counters for Counters.Counter;
+
+  Counters.Counter private _tokenIdCounter;
+
+  constructor() ERC721("Memory Token", "MTT") { }
+
+    function mint (address _wallet, string memory _tokenURI)
+     public returns(uint256)
+     {
+
+      uint256 tokenId = _tokenIdCounter.current();
+
+      _safeMint(_wallet, tokenId);
+      _setTokenURI(tokenId, _tokenURI);
+
+      _tokenIdCounter.increment();
+      return tokenId;
+
+    }
+}
+
+
+
+const MemoryToken = artifacts.require("MemoryToken");
+
+module.exports = function (deployer) {
+    deployer.deploy(MemoryToken);
+};
+
+
+const MemoryToken = artifacts.require('./contracts/MemoryToken.sol')
+
+require ('chai')
+    .use(require('chai-as-primised'))
+    .should()
+
+    contract('MemoryToken',(accounts)=>{
+        let token 
+
+        describe('deployment',async()=>{
+            it('deploys successfully', async()=>{
+
+                token = await MemoryToken.deployed()
+
+                const address = token.address
+
+                assert.notEqual(address,0x0)
+                assert.notEqual(address, '')
+                assert.notEqual(address, null)
+                assert.notEqual(address, undefined)                
+
+
+            })
+        })
+        
+
+    }
+    )
+	
+	
